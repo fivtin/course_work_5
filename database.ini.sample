@@ -1,0 +1,13 @@
+[postgresql]
+host=localhost
+user=postgres
+password=
+port=5432
+
+[settings]
+dbname=cw5
+vacancies_url=https://api.hh.ru/vacancies
+employers_url=https://api.hh.ru/employers
+per_page=100
+employers_per_page=10
+area=113
