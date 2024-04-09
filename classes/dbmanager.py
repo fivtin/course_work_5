@@ -5,20 +5,24 @@ from psycopg2 import Error
 
 
 class DBManager:
-    """ """
+    """ The class implements interaction with the database. """
 
     def __init__(self, params, dbname):
+        """ Initializing instance attributes. """
+        
         self.params = params
         self.dbname = dbname
         self.conn = None
 
-        # self.conn = self.create_database(self.dbname)
-
     def __del__(self):
+        """ Close the connection when an object is destroyed. """
+        
         if self.conn:
             self.conn.close()
 
     def exists_db(self):
+        """ Checks the existence of the database. """
+        
         conn = psycopg2.connect(dbname="postgres", **self.params)
         conn.autocommit = True
         cur = conn.cursor()
@@ -32,12 +36,12 @@ class DBManager:
         return True
 
     def create_database(self):
+        """ Create database and tables. """
+        
         try:
             conn = psycopg2.connect(dbname="postgres", **self.params)
             conn.autocommit = True
             cur = conn.cursor()
-
-            # cur.execute("SELECT pg_database_size(%s);", (self.dbname, ))
 
             cur.execute(f"DROP DATABASE IF EXISTS {self.dbname}")
             cur.execute(f"CREATE DATABASE {self.dbname}")
@@ -72,16 +76,18 @@ class DBManager:
                     """)
 
             conn.commit()
-            # conn.close()
 
-            # return conn  # psycopg2.connect(dbname=database_name, **self.params)
         except Error as e:
             print(e)
 
     def open_db(self):
+        """ Open a connection to the database for permanent use. """
+        
         self.conn = psycopg2.connect(dbname=self.dbname, **self.params)
 
     def save_employers(self, employers):
+        """ Save the list of employers in the database. """
+
         with self.conn.cursor() as cur:
             for employer in employers:
                 try:
@@ -96,6 +102,8 @@ class DBManager:
         self.conn.commit()
 
     def save_vacancies(self, vacancies):
+        """ Save the list of vacancies in the database. """
+        
         with self.conn.cursor() as cur:
             for vacancy in vacancies:
 
