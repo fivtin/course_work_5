@@ -54,3 +54,17 @@ class HeadHunterAPI:
             result.extend(response_json['items'])
 
         return result
+
+    def get_default_employers(self, employers):
+        """ Implementation of a method to load employers using a default list. """
+
+        employers = employers.split(',')
+
+        result = list()
+        for employer in employers:
+            response = requests.get(f"{self.employers_url}/{employer}")
+            if response.status_code == 200:
+                response_json = response.json()
+                result.append(response_json)
+
+        return result

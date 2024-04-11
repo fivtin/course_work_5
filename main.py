@@ -7,30 +7,40 @@ from utils import print_employers, get_employers_vacancies, print_vacancies
 def main():
     """ Main code for user interaction. """
 
-    params = config(section="postgresql")
-    settings = config(section="settings")
+    params = config(filename="database.ini", section="postgresql")
+    settings = config(filename="settings.ini", section="api")
 
     db = DBManager(params, settings["dbname"])
     hh = HeadHunterAPI(settings)
 
+    was_created = False
     if db.exists_db():
         print("База данных существует. Продолжить использовать (1) или пересоздать (0)")
         user_answer = input(">>> ")
         if user_answer == "0":
             db.create_database()
+            was_created = True
     else:
         db.create_database()
+        was_created = True
     db.open_db()
 
+    if was_created:
+        employers = hh.get_default_employers(settings['employers'])
+        db.save_employers(employers)
+        vacancies = get_employers_vacancies(hh, employers)
+        db.save_vacancies(vacancies)
+        print("Список работодателей и вакансий загружен.")
+
     while True:
-        print("Выберите действие:\n")
-        print("1. Добавить компании (топ 10)")
-        print("2. Список всех компаний")
-        print("3. Список всех вакансий")
-        print("4. Средняя зарплата по вакансиям")
-        print("5. Вакансии с зарплатой выше средней")
-        print("6. Поиск вакансий по слову")
-        print("0. Завершить")
+        print("\nВыберите действие:")
+        print("\t1. Добавить компании (топ 10)")
+        print("\t2. Список всех компаний")
+        print("\t3. Список всех вакансий")
+        print("\t4. Средняя зарплата по вакансиям")
+        print("\t5. Вакансии с зарплатой выше средней")
+        print("\t6. Поиск вакансий по слову")
+        print("\t0. Завершить")
 
         user_input = input(">>> ").strip()
         if user_input == "0":

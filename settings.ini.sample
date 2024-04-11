@@ -1,0 +1,8 @@
+[api]
+dbname=cw5
+vacancies_url=https://api.hh.ru/vacancies
+employers_url=https://api.hh.ru/employers
+per_page=100
+employers_per_page=10
+area=113
+employers=1204987,2119630,853827,2770726,665470,1204987,5600787,584485,5724503,10840955
